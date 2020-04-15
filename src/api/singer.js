@@ -15,17 +15,17 @@ export const singerTag = [
   ["韩国", 3, -100, -100],
   ["嘻哈", -100, 6, -100],
   ["轻音乐", -100, 9, -100],
-  ["其他", 6, -100, -100]
+  ["其他", 6, -100, -100],
 ];
 
 export function getSingerList() {
   let res = Promise.all(
-    singerTag.map(arr =>
+    singerTag.map((arr) =>
       fetch(
         `${baseUrl}getSingerList?area=${arr[1]}&genre=${arr[2]}&sex=${arr[3]}`
       )
-        .then(v => v.json())
-        .then(v => v?.response?.singerList?.data?.singerlist.slice(0, 30))
+        .then((v) => v.json())
+        .then((v) => v?.response?.singerList?.data?.singerlist.slice(0, 30))
     )
   );
   return res;
@@ -33,7 +33,7 @@ export function getSingerList() {
 
 export async function getSingerDetail(id) {
   let res = await fetch(
-    `${baseUrl}getSingerAlbum?singermid=${id}&limit=15`
-  ).then(v => v.json());
+    `${baseUrl}getSingerAlbum?singermid=${id}&limit=30`
+  ).then((v) => v.json());
   return res?.response?.singer?.data?.songlist;
 }

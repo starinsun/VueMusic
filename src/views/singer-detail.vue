@@ -1,50 +1,55 @@
 <template>
   <transition name="slide-fade">
-    <div class="singer-detail">
-      <div>1</div>
-      <ul>
-        <li v-for="song in songs.val" :key="song.id">
-          <span>{{ song.name }}</span>
-        </li>
-      </ul>
-    </div>
+    <Musiclist :songs="songs.val" :title="title" :bgImage="bgImage"></Musiclist>
   </transition>
 </template>
 
 <script>
 import { onMounted, computed, reactive } from "@vue/composition-api";
-import { SET_SINGER_SONGS } from "../store/constant";
+import Musiclist from "../components/Musiclist";
+import { getSingerDetail } from "../api/singer";
 
 export default {
+  name: "singer-detail",
+  components: { Musiclist },
+  // 使用Vuex，结果不对头
+  // setup(_, { root }) {
+  //   const store = root.$store;
+  //   const router = root.$options.router;
+  //   const singer = computed(() => store.getters.singer);
+  //   const songs = computed(() => store.getters.songs);
+  //   const title = computed(() => store.getters.singer.singer_name);
+  //   const bgImage = computed(() => store.getters.singer.singer_pic);
+  //   onMounted(() => {
+  //     if (!singer.value.singer_mid) router.push("/singer");
+  //     else {
+  //       store.dispatch(SET_SINGER_SONGS, singer.value.singer_mid);
+  //     }
+  //   });
+  //   return { singer, songs, title, bgImage };
+  // }
   setup(_, { root }) {
     const store = root.$store;
     const router = root.$options.router;
     const singer = computed(() => store.getters.singer);
+    const title = computed(() => store.getters.singer.singer_name);
+    const bgImage = computed(() => store.getters.singer.singer_pic);
     const songs = reactive({ val: [] });
     onMounted(() => {
       if (!singer.value.singer_mid) router.push("/singer");
       else {
-        store.dispatch(SET_SINGER_SONGS, singer.value.singer_mid).then(() => {
-          songs.val = store.getters.songs;
+        getSingerDetail(singer.value.singer_mid).then((v) => {
+          songs.val = v;
         });
       }
     });
-    return { singer, songs };
-  }
+    return { singer, songs, title, bgImage };
+  },
 };
 </script>
 
 <style lang="stylus" scoped>
 @import "../assets/stylus/variable.styl";
-
-.singer-detail
-  position fixed
-  z-index 100
-  top 0
-  left 0
-  right 0
-  bottom 0
-  background $color-background
 
 .slide-fade-enter-active
   transition: all .3s .3s ease
