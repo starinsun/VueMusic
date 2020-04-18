@@ -26,7 +26,8 @@ export default {
   name: "singer",
   components: { ListView },
   setup(_, { root }) {
-    const store = root.$store;
+    const store = root.$store,
+      router = root.$router;
     const list = reactive({ singerList: [] });
     const singer = ref(null);
     const listview = ref(null);
@@ -35,10 +36,10 @@ export default {
       getSingerList().then((res) => {
         list.singerList = res;
       });
-      _handlePlayList();
+      _handlePlayList(playList.value);
     });
     onActivated(() => {
-      _handlePlayList();
+      _handlePlayList(playList.value);
     });
     function _handlePlayList(playlist) {
       const bottom = playlist.length > 0 ? "55px" : "";
@@ -46,8 +47,8 @@ export default {
       listview.value.refresh();
     }
     function selectSinger(singer) {
-      root.$store.commit(SET_SINGER, singer);
-      root.$options.router.push({
+      store.commit(SET_SINGER, singer);
+      router.push({
         path: `/singer/${singer.singer_mid}`,
       });
     }
@@ -55,7 +56,8 @@ export default {
       () => playList.value,
       (newV) => {
         _handlePlayList(newV);
-      }
+      },
+      { lazy: true }
     );
     return { list, selectSinger, singer, listview };
   },

@@ -7,6 +7,7 @@ import {
   SET_SEQUENCE_LIST,
   SET_MODE,
   SET_CURRENT_IDX,
+  SET_DISC,
 } from "./constant";
 
 const mutations = {
@@ -33,6 +34,9 @@ const mutations = {
   },
   [SET_CURRENT_IDX](state, idx) {
     state.currentIdx = idx;
+  },
+  [SET_DISC](state, disc) {
+    state.disc = disc;
   },
 };
 

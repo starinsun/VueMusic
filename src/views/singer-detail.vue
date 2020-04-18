@@ -12,25 +12,9 @@ import { getSingerDetail } from "../api/singer";
 export default {
   name: "singer-detail",
   components: { Musiclist },
-  // 使用Vuex，结果不对头
-  // setup(_, { root }) {
-  //   const store = root.$store;
-  //   const router = root.$options.router;
-  //   const singer = computed(() => store.getters.singer);
-  //   const songs = computed(() => store.getters.songs);
-  //   const title = computed(() => store.getters.singer.singer_name);
-  //   const bgImage = computed(() => store.getters.singer.singer_pic);
-  //   onMounted(() => {
-  //     if (!singer.value.singer_mid) router.push("/singer");
-  //     else {
-  //       store.dispatch(SET_SINGER_SONGS, singer.value.singer_mid);
-  //     }
-  //   });
-  //   return { singer, songs, title, bgImage };
-  // }
   setup(_, { root }) {
     const store = root.$store;
-    const router = root.$options.router;
+    const router = root.$router;
     const singer = computed(() => store.getters.singer);
     const title = computed(() => store.getters.singer.singer_name);
     const bgImage = computed(() => store.getters.singer.singer_pic);

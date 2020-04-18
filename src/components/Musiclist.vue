@@ -74,6 +74,7 @@ export default {
     const playList = computed(() => store.getters.playList);
     const bgStyle = computed(() => `background-image:url(${props.bgImage})`);
     onMounted(() => {
+      console.log(bgImg.value, playList.value);
       scrollData.minTranslateY = -bgImg.value.clientHeight + RESERVE_HEIGHT;
       list.value.$el.style.top = `${bgImg.value.clientHeight}px`;
       // mixin
@@ -103,7 +104,8 @@ export default {
       () => playList.value,
       (newV) => {
         _handlePlayList(newV);
-      }
+      },
+      { lazy: true }
     );
     watch(
       () => scrollData.scrollY,

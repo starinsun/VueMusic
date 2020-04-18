@@ -14,7 +14,11 @@
         </div>
         <div class="songListTitle">\ 推荐歌单 /</div>
         <ul class="songList">
-          <li v-for="song in songList.val" :key="song.dissid">
+          <li
+            @click="selectItem(song)"
+            v-for="song in songList.val"
+            :key="song.dissid"
+          >
             <div class="icon">
               <img
                 v-lazy="song.imgurl"
@@ -32,6 +36,7 @@
       </div>
       <Loading v-show="!songList.val.length" class="loading-container" />
     </Scroll>
+    <router-view></router-view>
   </div>
 </template>
 
@@ -49,12 +54,14 @@ import Slider from "../ui/slider";
 import Scroll from "../ui/scroll";
 import Loading from "../ui/loading";
 import { getCount } from "../util.js";
+import { SET_DISC } from "../store/constant";
 
 export default {
   name: "Home",
   components: { Slider, Scroll, Loading },
   setup(_, { root }) {
-    const store = root.$store;
+    const store = root.$store,
+      router = root.$router;
     const bannerList = reactive({ name: "bannerList", val: [] });
     const songList = reactive({ name: "songList", val: [] });
     const scroll = ref(null);
@@ -68,10 +75,10 @@ export default {
       getSongList().then((v) => {
         songList.val = v;
       });
-      _handlePlayList();
+      _handlePlayList(playList.value);
     });
     onActivated(() => {
-      _handlePlayList();
+      _handlePlayList(playList.value);
     });
     function _handlePlayList(playlist) {
       const bottom = playlist.length > 0 ? "65px" : "";
@@ -83,11 +90,18 @@ export default {
       if (!hasGotImg.value) scroll.value.refresh();
       hasGotImg.value = true;
     }
+    function selectItem(item) {
+      router.push({
+        path: `/recommend/${item.dissid}`,
+      });
+      store.commit(SET_DISC, item);
+    }
     watch(
       () => playList.value,
       (newV) => {
         _handlePlayList(newV);
-      }
+      },
+      { lazy: true }
     );
     return {
       bannerList,
@@ -96,6 +110,7 @@ export default {
       getimg,
       scroll,
       recommend,
+      selectItem,
     };
   },
 };

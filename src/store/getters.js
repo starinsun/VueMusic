@@ -8,4 +8,5 @@ export default {
   mode: (state) => state.mode,
   currentIdx: (state) => state.currentIdx,
   currentSong: (state) => state.playList[state.currentIdx] || {},
+  disc: (state) => state.disc,
 };
