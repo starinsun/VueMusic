@@ -1,12 +1,23 @@
 <template>
-  <div class="singer">
-    <ListView @select="selectSinger" :data="list.singerList"></ListView>
+  <div class="singer" ref="singer">
+    <ListView
+      ref="listview"
+      @select="selectSinger"
+      :data="list.singerList"
+    ></ListView>
     <router-view></router-view>
   </div>
 </template>
 
 <script>
-import { reactive, onMounted } from "@vue/composition-api";
+import {
+  reactive,
+  onMounted,
+  onActivated,
+  watch,
+  computed,
+  ref,
+} from "@vue/composition-api";
 import { getSingerList } from "../api/singer";
 import ListView from "../components/Listview";
 import { SET_SINGER } from "../store/constant";
@@ -15,20 +26,39 @@ export default {
   name: "singer",
   components: { ListView },
   setup(_, { root }) {
+    const store = root.$store;
     const list = reactive({ singerList: [] });
+    const singer = ref(null);
+    const listview = ref(null);
+    const playList = computed(() => store.getters.playList);
     onMounted(() => {
-      getSingerList().then(res => {
+      getSingerList().then((res) => {
         list.singerList = res;
       });
+      _handlePlayList();
     });
+    onActivated(() => {
+      _handlePlayList();
+    });
+    function _handlePlayList(playlist) {
+      const bottom = playlist.length > 0 ? "55px" : "";
+      singer.value.style.bottom = bottom;
+      listview.value.refresh();
+    }
     function selectSinger(singer) {
       root.$store.commit(SET_SINGER, singer);
       root.$options.router.push({
-        path: `/singer/${singer.singer_mid}`
+        path: `/singer/${singer.singer_mid}`,
       });
     }
-    return { list, selectSinger };
-  }
+    watch(
+      () => playList.value,
+      (newV) => {
+        _handlePlayList(newV);
+      }
+    );
+    return { list, selectSinger, singer, listview };
+  },
 };
 </script>
 <style lang="stylus" scoped>

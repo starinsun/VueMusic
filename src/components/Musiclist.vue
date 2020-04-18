@@ -6,7 +6,7 @@
     <h1 class="title" v-html="title"></h1>
     <div class="bg-image" :style="bgStyle" ref="bgImg">
       <div class="play-wrapper" v-show="songs.length" ref="playBtn">
-        <div class="play">
+        <div class="play" @click="random">
           <i class="icon-play"></i>
           <span class="text">随机播放歌曲</span>
         </div>
@@ -23,7 +23,7 @@
       ref="list"
     >
       <div class="song-list-wrapper">
-        <Songlist :songs="songs"></Songlist>
+        <Songlist @select="selectItem" :songs="songs"></Songlist>
       </div>
     </Scroll>
   </div>
@@ -36,6 +36,7 @@ import {
   ref,
   watch,
   reactive,
+  onActivated,
 } from "@vue/composition-api";
 import Scroll from "../ui/scroll";
 import Songlist from "./Songlist";
@@ -62,24 +63,48 @@ export default {
     const PROBETYPE = 3,
       LISTEN_SCROLL = true,
       RESERVE_HEIGHT = 40,
-      router = root.$options.router;
+      router = root.$options.router,
+      store = root.$store;
     const list = ref(null);
     const bgImg = ref(null);
     const layers = ref(null);
     const filter = ref(null);
     const playBtn = ref(null);
     const scrollData = reactive({ scrollY: 0, minTranslateY: 0 });
+    const playList = computed(() => store.getters.playList);
     const bgStyle = computed(() => `background-image:url(${props.bgImage})`);
     onMounted(() => {
       scrollData.minTranslateY = -bgImg.value.clientHeight + RESERVE_HEIGHT;
       list.value.$el.style.top = `${bgImg.value.clientHeight}px`;
+      // mixin
+      _handlePlayList(playList.value);
     });
+    onActivated(() => {
+      _handlePlayList(playList.value);
+    });
+    function _handlePlayList(playlist) {
+      const bottom = playlist.length > 0 ? "55px" : "";
+      list.value.$el.style.bottom = bottom;
+      list.value.refresh();
+    }
     function scroll(pos) {
       scrollData.scrollY = pos.y;
     }
     function goBack() {
       router.back();
     }
+    function selectItem(song, idx) {
+      store.dispatch("selectPlay", { list: props.songs, idx });
+    }
+    function random() {
+      store.dispatch("randomPlay", { list: props.songs });
+    }
+    watch(
+      () => playList.value,
+      (newV) => {
+        _handlePlayList(newV);
+      }
+    );
     watch(
       () => scrollData.scrollY,
       (newY) => {
@@ -125,6 +150,8 @@ export default {
       filter,
       goBack,
       playBtn,
+      selectItem,
+      random,
     };
   },
 };
@@ -157,7 +184,9 @@ export default {
     left: 10%
     z-index: 40
     width: 80%
-    no-wrap()
+    text-overflow: ellipsis
+    overflow: hidden
+    white-space: nowrap
     text-align: center
     line-height: 40px
     font-size: $font-size-large

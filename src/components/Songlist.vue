@@ -1,7 +1,12 @@
 <template>
   <div class="song-list">
     <ul>
-      <li v-for="song in songs" class="item" :key="song.id">
+      <li
+        @click="selectItem(song, idx)"
+        v-for="(song, idx) in songs"
+        class="item"
+        :key="song.id"
+      >
         <div class="content">
           <h2 class="name">{{ song.name }}</h2>
           <p class="desc">{{ getDesc(song) }}</p>
@@ -22,11 +27,14 @@ export default {
     },
   },
   components: { Loading },
-  setup() {
+  setup(_, { emit }) {
     function getDesc(song) {
-      return `${song.singer[0].name} · ${song.album.name} · ${song.title}`;
+      return `${song.singer[0].name} · ${song.album.name} · ${song.name}`;
     }
-    return { getDesc };
+    function selectItem(song, idx) {
+      emit("select", song, idx);
+    }
+    return { getDesc, selectItem };
   },
 };
 </script>
@@ -65,10 +73,14 @@ export default {
       line-height: 20px
       overflow: hidden
       .name
-        no-wrap()
+        text-overflow: ellipsis
+        overflow: hidden
+        white-space: nowrap
         color: $color-text
       .desc
-        no-wrap()
+        text-overflow: ellipsis
+        overflow: hidden
+        white-space: nowrap
         margin-top: 4px
         color: $color-text-d
 </style>

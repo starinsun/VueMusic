@@ -66,8 +66,8 @@ export default {
   props: {
     data: {
       type: Array,
-      default: null
-    }
+      default: null,
+    },
   },
   components: { Scroll, Loading },
   setup(props, { root, emit }) {
@@ -76,9 +76,9 @@ export default {
     const listfixed = ref(null);
     const scrollData = reactive({
       scrollY: -1,
-      currentIdx: 0
+      currentIdx: 0,
     });
-    const tagList = computed(() => singerTag.map(item => item[0]));
+    const tagList = computed(() => singerTag.map((item) => item[0]));
     const fixedTitle = computed(() => {
       if (scrollData.scrollY > 0) return "";
       return props.data[scrollData.currentIdx]
@@ -103,6 +103,9 @@ export default {
       let delta = ((touch.y2 - touch.y1) / ARCHOR_HEIGHT) | 0;
       let idx = +touch.idx + delta;
       _scrollTo(idx);
+    }
+    function refresh() {
+      listview.value.refresh();
     }
     function scroll(pos) {
       scrollData.scrollY = pos.y;
@@ -136,7 +139,7 @@ export default {
     );
     watch(
       () => scrollData.scrollY,
-      newY => {
+      (newY) => {
         for (let i = 0; i < listHeight.length - 1; i++) {
           if (newY > 0) {
             scrollData.currentIdx = 0;
@@ -164,9 +167,10 @@ export default {
       scrollData,
       probeType,
       fixedTitle,
-      selectItem
+      selectItem,
+      refresh,
     };
-  }
+  },
 };
 </script>
 

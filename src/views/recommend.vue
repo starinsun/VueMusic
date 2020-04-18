@@ -1,5 +1,5 @@
 <template>
-  <div class="recommend">
+  <div class="recommend" ref="recommend">
     <Scroll ref="scroll" class="scroll-provider" :data="songList.val">
       <!-- 为什么会有div，上面那个我们限制了一个高度700，下面这个就是整个的高度2000，这样才能滚动 -->
       <div>
@@ -36,7 +36,14 @@
 </template>
 
 <script>
-import { onMounted, reactive, ref } from "@vue/composition-api";
+import {
+  onMounted,
+  reactive,
+  ref,
+  computed,
+  watch,
+  onActivated,
+} from "@vue/composition-api";
 import { getRecommendBanner, getSongList } from "../api/recommend";
 import Slider from "../ui/slider";
 import Scroll from "../ui/scroll";
@@ -46,32 +53,51 @@ import { getCount } from "../util.js";
 export default {
   name: "Home",
   components: { Slider, Scroll, Loading },
-  setup() {
+  setup(_, { root }) {
+    const store = root.$store;
     const bannerList = reactive({ name: "bannerList", val: [] });
     const songList = reactive({ name: "songList", val: [] });
     const scroll = ref(null);
     const hasGotImg = ref(false);
+    const recommend = ref(null);
+    const playList = computed(() => store.getters.playList);
     onMounted(() => {
-      getRecommendBanner().then(v => {
+      getRecommendBanner().then((v) => {
         bannerList.val = v;
       });
-      getSongList().then(v => {
+      getSongList().then((v) => {
         songList.val = v;
       });
+      _handlePlayList();
     });
+    onActivated(() => {
+      _handlePlayList();
+    });
+    function _handlePlayList(playlist) {
+      const bottom = playlist.length > 0 ? "65px" : "";
+      recommend.value.style.bottom = bottom;
+      scroll.value.refresh();
+    }
     function getimg() {
       //FIXME:当我们判断图片已经加载时，重新刷新拿到最新高度，只判断一次即可
       if (!hasGotImg.value) scroll.value.refresh();
       hasGotImg.value = true;
     }
+    watch(
+      () => playList.value,
+      (newV) => {
+        _handlePlayList(newV);
+      }
+    );
     return {
       bannerList,
       songList,
       getCount,
       getimg,
-      scroll
+      scroll,
+      recommend,
     };
-  }
+  },
 };
 </script>
 
