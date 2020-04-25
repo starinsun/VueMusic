@@ -8,6 +8,7 @@ import {
   SET_MODE,
   SET_CURRENT_IDX,
   SET_DISC,
+  SET_RANK,
 } from "./constant";
 
 const mutations = {
@@ -38,6 +39,9 @@ const mutations = {
   [SET_DISC](state, disc) {
     state.disc = disc;
   },
+  [SET_RANK](state, rank) {
+    state.rank = rank
+  }
 };
 
 export default mutations;

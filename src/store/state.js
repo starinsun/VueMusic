@@ -8,6 +8,7 @@ const state = {
   mode: 0,
   currentIdx: -1,
   disc: {},
+  rank:{}
 };
 /**
  * mode:0:sequece, 1: loop, 2:random

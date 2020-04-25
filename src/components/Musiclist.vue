@@ -23,7 +23,7 @@
       ref="list"
     >
       <div class="song-list-wrapper">
-        <Songlist @select="selectItem" :songs="songs"></Songlist>
+        <SongList @select="selectItem" :songs="songs" :rank="rank"></SongList>
       </div>
     </Scroll>
   </div>
@@ -39,7 +39,7 @@ import {
   onActivated,
 } from "@vue/composition-api";
 import Scroll from "../ui/scroll";
-import Songlist from "./Songlist";
+import SongList from "./Songlist";
 export default {
   props: {
     bgImage: {
@@ -48,22 +48,26 @@ export default {
     },
     songs: {
       type: Array,
-      default: null,
+      default: ()=>[],
     },
     title: {
       type: String,
       default: "",
     },
+    rank:{
+      type: Boolean,
+      default: false
+    }
   },
   components: {
     Scroll,
-    Songlist,
+    SongList,
   },
   setup(props, { root }) {
     const PROBETYPE = 3,
       LISTEN_SCROLL = true,
       RESERVE_HEIGHT = 40,
-      router = root.$options.router,
+      router = root.$router,
       store = root.$store;
     const list = ref(null);
     const bgImg = ref(null);
@@ -74,7 +78,6 @@ export default {
     const playList = computed(() => store.getters.playList);
     const bgStyle = computed(() => `background-image:url(${props.bgImage})`);
     onMounted(() => {
-      console.log(bgImg.value, playList.value);
       scrollData.minTranslateY = -bgImg.value.clientHeight + RESERVE_HEIGHT;
       list.value.$el.style.top = `${bgImg.value.clientHeight}px`;
       // mixin

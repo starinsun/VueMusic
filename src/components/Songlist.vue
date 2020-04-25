@@ -7,6 +7,9 @@
         class="item"
         :key="song.id"
       >
+        <div class="rank" v-show="rank">
+          <span class="text">{{idx+1}}</span>
+        </div>
         <div class="content">
           <h2 class="name">{{ song.name }}</h2>
           <p class="desc">{{ getDesc(song) }}</p>
@@ -25,6 +28,10 @@ export default {
       type: Array,
       default: null,
     },
+    rank:{
+      type: Boolean,
+      default: false
+    }
   },
   components: { Loading },
   setup(_, { emit }) {
@@ -54,17 +61,6 @@ export default {
       width: 25px
       margin-right: 30px
       text-align: center
-      .icon
-        display: inline-block
-        width: 25px
-        height: 24px
-        background-size: 25px 24px
-        &.icon0
-          bg-image('first')
-        &.icon1
-          bg-image('second')
-        &.icon2
-          bg-image('third')
       .text
         color: $color-theme
         font-size: $font-size-large

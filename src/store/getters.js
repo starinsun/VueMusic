@@ -9,4 +9,5 @@ export default {
   currentIdx: (state) => state.currentIdx,
   currentSong: (state) => state.playList[state.currentIdx] || {},
   disc: (state) => state.disc,
+  rank: state => state.rank
 };
