@@ -7,7 +7,9 @@ import {
   SET_FULL_SCREEN,
   SET_PLAYING_STATE,
   SET_MODE,
+  SET_SEARCH_HISTORY,
 } from "./constant";
+import { saveSearch, deleteSearch, clearList } from "../util";
 
 export default {
   async [SET_SINGER_SONGS]({ commit }, id) {
@@ -71,5 +73,17 @@ export default {
     commit(SET_CURRENT_IDX, currentIdx);
     commit(SET_FULL_SCREEN, true);
     commit(SET_PLAYING_STATE, true);
+  },
+
+  saveSearchHistory({ commit }, query) {
+    commit(SET_SEARCH_HISTORY, saveSearch(query));
+  },
+
+  deleteSearchHistory({ commit }, query) {
+    commit(SET_SEARCH_HISTORY, deleteSearch(query));
+  },
+
+  clearSearchHistory({ commit }) {
+    commit(SET_SEARCH_HISTORY, clearList());
   },
 };

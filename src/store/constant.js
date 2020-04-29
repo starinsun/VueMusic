@@ -16,4 +16,6 @@ export const SET_CURRENT_IDX = "SET_CURRENT_IDX";
 
 export const SET_DISC = "SET_DISC";
 
-export const SET_RANK = "SET_RANK"
+export const SET_RANK = "SET_RANK";
+
+export const SET_SEARCH_HISTORY = "SET_SEARCH_HISTORY";

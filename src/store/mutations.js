@@ -9,6 +9,7 @@ import {
   SET_CURRENT_IDX,
   SET_DISC,
   SET_RANK,
+  SET_SEARCH_HISTORY,
 } from "./constant";
 
 const mutations = {
@@ -40,8 +41,11 @@ const mutations = {
     state.disc = disc;
   },
   [SET_RANK](state, rank) {
-    state.rank = rank
-  }
+    state.rank = rank;
+  },
+  [SET_SEARCH_HISTORY](state, history) {
+    state.searchHistory = history;
+  },
 };
 
 export default mutations;

@@ -11,6 +11,7 @@
     "@vue/composition-api": "^0.5.0",
     "better-scroll": "^1.15.2",
     "core-js": "^3.6.4",
+    "good-storage": "^1.1.1",
     "lyric-parser": "^1.0.1",
     "vue": "^2.6.11",
     "vue-lazyload": "^1.3.3",

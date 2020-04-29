@@ -10,8 +10,8 @@
       <li
         @click="selectItem(item)"
         class="suggest-item"
-        v-for="item in list"
-        :key="item.mid"
+        v-for="(item, idx) in list"
+        :key="idx"
       >
         <div class="icon">
           <i class="icon-music"></i>
@@ -55,7 +55,7 @@ export default {
     Loading,
     NoResult,
   },
-  setup(props, { root }) {
+  setup(props, { root, emit }) {
     const store = root.$store;
     let timer = null;
     //防抖的定义要拿出来定义，不然会报错
@@ -82,6 +82,7 @@ export default {
     }
     function selectItem(item) {
       store.dispatch("insertSong", item);
+      emit("select");
     }
     function _search(key, page, limit) {
       suggest.hasMore = true;
@@ -118,12 +119,16 @@ export default {
         debouceSearch(props.query, suggest.page, LIMIT);
       }
     );
+    function refresh() {
+      sug.value.refresh();
+    }
     return {
       sug,
       ...toRefs(suggest),
       getListName,
       searchMore,
       selectItem,
+      refresh,
     };
   },
 };

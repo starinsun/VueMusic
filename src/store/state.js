@@ -1,3 +1,5 @@
+import { localSearch } from "../util";
+
 const state = {
   singer: {},
   songs: [],
@@ -9,7 +11,7 @@ const state = {
   currentIdx: -1,
   disc: {},
   rank: {},
-  searchHistory: [],
+  searchHistory: localSearch(),
 };
 /**
  * mode:0:sequece, 1: loop, 2:random
