@@ -114,9 +114,12 @@
             ></i>
           </ProgressCircle>
         </div>
-        <div class="control"><i class="icon-playlist"></i></div>
+        <div class="control" @click.stop="showPlayList">
+          <i class="icon-playlist"></i>
+        </div>
       </div>
     </transition>
+    <Playlist ref="playComponent"></Playlist>
     <audio
       :src="currentSong.audio"
       ref="audio"
@@ -140,11 +143,12 @@ import {
 import ProgressBar from "../ui/progress-bar";
 import ProgressCircle from "../ui/progress-circle";
 import Scroll from "../ui/scroll";
+import Playlist from "./Playlist";
 import Lyric from "lyric-parser";
 
 export default {
   name: "Player",
-  components: { ProgressBar, ProgressCircle, Scroll },
+  components: { ProgressBar, ProgressCircle, Scroll, Playlist },
   setup(_, { root }) {
     const touch = {};
     const store = root.$store;
@@ -152,6 +156,7 @@ export default {
     const lyricList = ref(null);
     const lyricLines = ref(null);
     const middleL = ref(null);
+    const playComponent = ref(null);
     const sing = reactive({
       ready: false,
       currentTime: 0,
@@ -315,6 +320,9 @@ export default {
       middleL.value.style.opacity = opacity;
       middleL.value.style["transition"] = `all 300ms`;
     }
+    function showPlayList() {
+      playComponent.value.onShow();
+    }
     function _loop() {
       audio.value.currentTime = 0;
       audio.value.play();
@@ -399,6 +407,8 @@ export default {
       midTouchStart,
       midTouchMove,
       middleL,
+      showPlayList,
+      playComponent,
     };
   },
 };
