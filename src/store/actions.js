@@ -38,4 +38,38 @@ export default {
     commit(SET_FULL_SCREEN, true);
     commit(SET_PLAYING_STATE, true);
   },
+
+  insertSong({ commit, state }, song) {
+    let playList = state.playList.slice();
+    let sequenceList = state.sequenceList.slice();
+    let currentIdx = state.currentIdx;
+    let curSong = playList[currentIdx];
+    let fdIdx = playList.findIndex((item) => item.mid === song.mid);
+    currentIdx++;
+    playList.splice(currentIdx, 0, song);
+    if (fdIdx > -1) {
+      if (currentIdx > fdIdx) {
+        playList.splice(fdIdx, 1);
+        currentIdx--;
+      } else {
+        playList.splice(fdIdx + 1, 1);
+      }
+    }
+    let curSeqIdx =
+      sequenceList.findIndex((item) => item.mid === curSong.mid) + 1;
+    let fsIdx = sequenceList.findIndex((item) => item.mid === song.mid);
+    sequenceList.splice(curSeqIdx, 0, song);
+    if (fsIdx > -1) {
+      if (curSeqIdx > fsIdx) {
+        sequenceList.splice(fsIdx, 1);
+      } else {
+        sequenceList.splice(fsIdx + 1, 1);
+      }
+    }
+    commit(SET_PLAYLIST, playList);
+    commit(SET_SEQUENCE_LIST, sequenceList);
+    commit(SET_CURRENT_IDX, currentIdx);
+    commit(SET_FULL_SCREEN, true);
+    commit(SET_PLAYING_STATE, true);
+  },
 };

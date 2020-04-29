@@ -7,7 +7,12 @@
     ref="sug"
   >
     <ul class="suggest-list">
-      <li class="suggest-item" v-for="item in list" :key="item.mid">
+      <li
+        @click="selectItem(item)"
+        class="suggest-item"
+        v-for="item in list"
+        :key="item.mid"
+      >
         <div class="icon">
           <i class="icon-music"></i>
         </div>
@@ -17,6 +22,9 @@
       </li>
       <Loading v-show="hasMore"></Loading>
     </ul>
+    <div class="no-result-wrapper" v-show="!hasMore && !list.length">
+      <NoResult></NoResult>
+    </div>
   </Scroll>
 </template>
 
@@ -31,6 +39,7 @@ import {
 import { getSearchRes } from "../api/search";
 import Scroll from "../ui/scroll";
 import Loading from "../ui/loading";
+import NoResult from "../ui/no-result";
 
 const LIMIT = 20;
 
@@ -44,8 +53,10 @@ export default {
   components: {
     Scroll,
     Loading,
+    NoResult,
   },
-  setup(props) {
+  setup(props, { root }) {
+    const store = root.$store;
     let timer = null;
     //防抖的定义要拿出来定义，不然会报错
     const debouceSearch = _debouce(_search, 500);
@@ -68,6 +79,9 @@ export default {
         suggest.list = [...suggest.list, ...res];
         _checkMore(res);
       });
+    }
+    function selectItem(item) {
+      store.dispatch("insertSong", item);
     }
     function _search(key, page, limit) {
       suggest.hasMore = true;
@@ -109,6 +123,7 @@ export default {
       ...toRefs(suggest),
       getListName,
       searchMore,
+      selectItem,
     };
   },
 };
@@ -144,6 +159,6 @@ export default {
   .no-result-wrapper
     position: absolute
     width: 100%
-    top: 50%
+    top: 40%
     transform: translateY(-50%)
 </style>
