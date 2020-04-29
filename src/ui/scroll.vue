@@ -11,20 +11,24 @@ export default {
   props: {
     probeType: {
       type: Number,
-      default: 1
+      default: 1,
     },
     click: {
       type: Boolean,
-      default: true
+      default: true,
     },
     data: {
       type: Array,
-      default: null
+      default: null,
     },
     listenScroll: {
       type: Boolean,
-      default: false
-    }
+      default: false,
+    },
+    pullup: {
+      type: Boolean,
+      default: false,
+    },
   },
   setup(props, { root, emit }) {
     const wrapper = ref(null);
@@ -47,11 +51,18 @@ export default {
       if (!wrapper.value) return;
       scroll = new Bscroll(wrapper.value, {
         probeType: props.probeType,
-        click: props.click
+        click: props.click,
       });
       if (props.listenScroll) {
-        scroll.on("scroll", pos => {
+        scroll.on("scroll", (pos) => {
           emit("scroll", pos);
+        });
+      }
+      if (props.pullup) {
+        scroll.on("scrollEnd", () => {
+          if (scroll.y <= scroll.maxScrollY + 50) {
+            emit("scrollToEnd");
+          }
         });
       }
     }
@@ -73,6 +84,6 @@ export default {
     //TODO:这些东西都会被暴露出去，在父类中拿到Vue Component就可以收到这个方法
     //这样是不是增加了组件通讯发方式呢？
     return { ref, wrapper, refresh, scrollTo, scrollToElement };
-  }
+  },
 };
 </script>
