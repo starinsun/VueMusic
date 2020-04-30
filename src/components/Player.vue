@@ -152,7 +152,6 @@ import Playlist from "./Playlist";
 import Lyric from "lyric-parser";
 
 export default {
-  name: "Player",
   components: { ProgressBar, ProgressCircle, Scroll, Playlist },
   setup(_, { root }) {
     const touch = {};

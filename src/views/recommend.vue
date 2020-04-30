@@ -57,7 +57,7 @@ import { getCount } from "../util.js";
 import { SET_DISC } from "../store/constant";
 
 export default {
-  name: "Home",
+  name: "recommend",
   components: { Slider, Scroll, Loading },
   setup(_, { root }) {
     const store = root.$store,

@@ -11,14 +11,14 @@ export const nomarlise = async (list) => {
     arr.map((item) =>
       fetch(item)
         .then((v) => v.json())
-        .then((v) => v?.response?.playLists)
+        .then((v) => v.response.playLists)
     )
   );
   let promises1 = await Promise.all(
     arr1.map((item) =>
       fetch(item)
         .then((v) => v.json())
-        .then((v) => v?.response.lyric)
+        .then((v) => v.response.lyric)
     )
   );
   let newList = list.map((v, i) => {

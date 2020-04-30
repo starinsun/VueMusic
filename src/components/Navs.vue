@@ -16,9 +16,7 @@
 </template>
 
 <script>
-export default {
-  name: "Navs",
-};
+export default {};
 </script>
 
 <style lang="stylus" scoped>

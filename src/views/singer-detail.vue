@@ -10,7 +10,6 @@ import Musiclist from "../components/Musiclist";
 import { getSingerDetail } from "../api/singer";
 
 export default {
-  name: "singer-detail",
   components: { Musiclist },
   setup(_, { root }) {
     const store = root.$store;

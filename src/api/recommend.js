@@ -1,12 +1,12 @@
 import { baseUrl, nomarlise } from "./index";
 export async function getRecommendBanner() {
   let res = await fetch(`${baseUrl}getDigitalAlbumLists`).then((v) => v.json());
-  return res?.response?.data?.banner;
+  return res.response.data.banner;
 }
 
 export async function getSongList() {
   let res = await fetch(`${baseUrl}getSongLists`).then((v) => v.json());
-  return res?.response?.data?.list;
+  return res.response.data.list;
 }
 
 export async function getDiscList(id) {

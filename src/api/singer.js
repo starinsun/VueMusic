@@ -24,7 +24,7 @@ export function getSingerList() {
         `${baseUrl}getSingerList?area=${arr[1]}&genre=${arr[2]}&sex=${arr[3]}`
       )
         .then((v) => v.json())
-        .then((v) => v?.response?.singerList?.data?.singerlist.slice(0, 30))
+        .then((v) => v.response.singerList.data.singerlist.slice(0, 30))
     )
   );
   return res;
@@ -34,7 +34,7 @@ export async function getSingerDetail(id) {
   let res = await fetch(
     `${baseUrl}getSingerAlbum?singermid=${id}&limit=23`
   ).then((v) => v.json());
-  let list = res?.response?.singer?.data?.songlist;
+  let list = res.response.singer.data.songlist;
   let normalData = await nomarlise(list);
   return normalData;
 }

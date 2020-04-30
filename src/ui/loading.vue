@@ -10,9 +10,7 @@
 </template>
 
 <script>
-export default {
-  name: "loading",
-};
+export default {};
 </script>
 
 <style lang="stylus">

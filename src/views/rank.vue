@@ -41,6 +41,7 @@ import Scroll from "../ui/scroll";
 import { SET_RANK } from "../store/constant";
 
 export default {
+  name: "rank",
   components: { Loading, Scroll },
   setup(_, { root }) {
     const store = root.$store;

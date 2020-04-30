@@ -65,6 +65,7 @@ import {
 import { getHotkey } from "../api/search";
 
 export default {
+  name: "search",
   components: {
     SearchBox,
     Suggest,
@@ -85,7 +86,7 @@ export default {
       query: "",
     });
     const searchHistory = computed(() => store.getters.searchHistory);
-    const shortcut = computed(() => [...search.hotkey, ...searchHistory.value]);
+    const shortcut = computed(() => search.hotkey.concat(searchHistory.value));
     function addQuery(key) {
       searchBox.value.setQuery(key);
     }

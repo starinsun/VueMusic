@@ -10,7 +10,6 @@ import { reactive, computed, onMounted } from "@vue/composition-api";
 import { getDiscList } from "../api/recommend";
 
 export default {
-  name: "discDetail",
   components: { MusicList },
   setup(_, { root }) {
     const store = root.$store,

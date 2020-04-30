@@ -24,7 +24,6 @@ import {
 import Bscroll from "better-scroll";
 
 export default {
-  name: "slider",
   setup(_, { root }) {
     const sliderGroup = ref(null);
     const slider = ref(null);
