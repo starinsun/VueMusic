@@ -1,4 +1,4 @@
-import { localSearch } from "../util";
+import { localSearch, localFavor } from "../util";
 
 const state = {
   singer: {},
@@ -12,6 +12,7 @@ const state = {
   disc: {},
   rank: {},
   searchHistory: localSearch(),
+  favor: localFavor(),
 };
 /**
  * mode:0:sequece, 1: loop, 2:random

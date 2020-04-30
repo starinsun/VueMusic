@@ -84,7 +84,12 @@
             <div class="icon i-right" :class="noClass">
               <i @click="next" class="icon-next"></i>
             </div>
-            <div class="icon i-right"><i class="icon-not-favorite"></i></div>
+            <div class="icon i-right">
+              <i
+                @click="toggleFavor(currentSong)"
+                :class="getFavorIcon(currentSong)"
+              ></i>
+            </div>
           </div>
         </div>
       </div>
@@ -323,6 +328,20 @@ export default {
     function showPlayList() {
       playComponent.value.onShow();
     }
+    function getFavorIcon(item) {
+      return _isFavor(item) ? "icon-favorite" : "icon-not-favorite";
+    }
+    function toggleFavor(item) {
+      _isFavor(item)
+        ? store.dispatch("deleteFavor", item)
+        : store.dispatch("saveFavor", item);
+    }
+    function _isFavor(item) {
+      const idx = store.getters.favor.findIndex(
+        (song) => song.mid === item.mid
+      );
+      return idx > -1;
+    }
     function _loop() {
       audio.value.currentTime = 0;
       audio.value.play();
@@ -351,6 +370,7 @@ export default {
     watch(
       () => currentSong.value,
       (newS, oldS) => {
+        if (!newS.mid) return;
         if (newS.mid === oldS.mid) return;
         if (sing.lyric) sing.lyric.stop();
         root.$nextTick(() => {
@@ -409,6 +429,8 @@ export default {
       middleL,
       showPlayList,
       playComponent,
+      getFavorIcon,
+      toggleFavor,
     };
   },
 };

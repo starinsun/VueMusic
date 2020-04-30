@@ -11,4 +11,5 @@ export default {
   disc: (state) => state.disc,
   rank: (state) => state.rank,
   searchHistory: (state) => state.searchHistory,
+  favor: (state) => state.favor,
 };

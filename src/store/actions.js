@@ -8,8 +8,15 @@ import {
   SET_PLAYING_STATE,
   SET_MODE,
   SET_SEARCH_HISTORY,
+  SET_FAVOR,
 } from "./constant";
-import { saveSearch, deleteSearch, clearList } from "../util";
+import {
+  saveSearch,
+  deleteSearch,
+  clearList,
+  setFavor,
+  delFavor,
+} from "../util";
 
 export default {
   async [SET_SINGER_SONGS]({ commit }, id) {
@@ -85,5 +92,44 @@ export default {
 
   clearSearchHistory({ commit }) {
     commit(SET_SEARCH_HISTORY, clearList());
+  },
+
+  deleteSong({ commit, state }, song) {
+    let playList = state.playList.slice();
+    let sequenceList = state.sequenceList.slice();
+    let currentIdx = state.currentIdx;
+
+    let fdIdx = playList.findIndex((item) => item.mid === song.mid);
+    playList.splice(fdIdx, 1);
+    let fsIdx = sequenceList.findIndex((item) => item.mid === song.mid);
+    sequenceList.splice(fsIdx, 1);
+
+    if (currentIdx > fdIdx || currentIdx === playList.length) {
+      currentIdx--;
+    }
+
+    commit(SET_CURRENT_IDX, currentIdx);
+    commit(SET_SEQUENCE_LIST, sequenceList);
+    commit(SET_PLAYLIST, playList);
+
+    if (!playList.length) {
+      commit(SET_PLAYING_STATE, false);
+    } else {
+      commit(SET_PLAYING_STATE, true);
+    }
+  },
+
+  deleteAll({ commit }) {
+    commit(SET_CURRENT_IDX, -1);
+    commit(SET_SEQUENCE_LIST, []);
+    commit(SET_PLAYLIST, []);
+    commit(SET_PLAYING_STATE, false);
+  },
+
+  saveFavor({ commit }, song) {
+    commit(SET_FAVOR, setFavor(song));
+  },
+  deleteFavor({ commit }, song) {
+    commit(SET_FAVOR, delFavor(song));
   },
 };

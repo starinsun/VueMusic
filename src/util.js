@@ -14,6 +14,9 @@ export const getCount = (count) => {
 const SEARCH_KEY = "__search__";
 const SEARCH_MAX_LEN = 15;
 
+const FAVOR_KEY = "__favor__";
+const FAVOR_MAX_LEN = 100;
+
 function insertArray(arr, val, compare, maxLen) {
   const idx = arr.findIndex(compare);
   if (idx === 0) {
@@ -55,4 +58,22 @@ export function deleteSearch(query) {
 export function clearList() {
   storage.remove(SEARCH_KEY);
   return [];
+}
+
+export function setFavor(song) {
+  let songs = storage.get(FAVOR_KEY, []);
+  insertArray(songs, song, (item) => item.mid === song.mid, FAVOR_MAX_LEN);
+  storage.set(FAVOR_KEY, songs);
+  return songs;
+}
+
+export function delFavor(song) {
+  let songs = storage.get(FAVOR_KEY, []);
+  deleteFromArray(songs, (item) => item.mid === song.mid);
+  storage.set(FAVOR_KEY, songs);
+  return songs;
+}
+
+export function localFavor() {
+  return storage.get(FAVOR_KEY, []);
 }

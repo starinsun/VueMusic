@@ -10,6 +10,7 @@ import {
   SET_DISC,
   SET_RANK,
   SET_SEARCH_HISTORY,
+  SET_FAVOR,
 } from "./constant";
 
 const mutations = {
@@ -45,6 +46,9 @@ const mutations = {
   },
   [SET_SEARCH_HISTORY](state, history) {
     state.searchHistory = history;
+  },
+  [SET_FAVOR](state, favor) {
+    state.favor = favor;
   },
 };
 

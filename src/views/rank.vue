@@ -2,14 +2,19 @@
   <div class="rank" ref="rankList">
     <Scroll :data="rank.lists" class="toplist" ref="topList">
       <ul>
-        <li class="item" v-for="item in rank.lists" :key="item.id" @click="selectItem(item)">
+        <li
+          class="item"
+          v-for="item in rank.lists"
+          :key="item.id"
+          @click="selectItem(item)"
+        >
           <div class="icon">
             <img width="100" height="100" v-lazy="item.picUrl" />
           </div>
           <ul class="songlist">
-            <li class="song" v-for="(song,idx) in item.songList" :key="idx">
-              <span>{{idx+1}} · </span>
-              <span>{{song.singername}} </span>
+            <li class="song" v-for="(song, idx) in item.songList" :key="idx">
+              <span>{{ idx + 1 }} · </span>
+              <span>{{ song.songname }} · {{ song.singername }} </span>
             </li>
           </ul>
         </li>
@@ -24,49 +29,55 @@
 
 <script>
 import Loading from "../ui/loading";
-import {onMounted, reactive, ref, computed, onActivated} from "@vue/composition-api";
-import {getRankList} from "../api/rank";
-import Scroll from "../ui/scroll"
-import {SET_RANK} from "../store/constant";
+import {
+  onMounted,
+  reactive,
+  ref,
+  computed,
+  onActivated,
+} from "@vue/composition-api";
+import { getRankList } from "../api/rank";
+import Scroll from "../ui/scroll";
+import { SET_RANK } from "../store/constant";
 
 export default {
-  components: { Loading,Scroll },
-  setup(_,{root}){
-    const store = root.$store
-    const router = root.$router
-    const rankList = ref(null)
-    const topList = ref(null)
+  components: { Loading, Scroll },
+  setup(_, { root }) {
+    const store = root.$store;
+    const router = root.$router;
+    const rankList = ref(null);
+    const topList = ref(null);
     const rank = reactive({
-      lists:[]
-    })
-    const playList = computed(()=>store.getters.playList)
+      lists: [],
+    });
+    const playList = computed(() => store.getters.playList);
     function _handlePlayList(playlist) {
       const bottom = playlist.length > 0 ? "65px" : "";
       rankList.value.style.bottom = bottom;
       topList.value.refresh();
     }
-    function selectItem(item){
+    function selectItem(item) {
       router.push({
-        path:`/rank/${item.id}`
-      })
-      store.commit(SET_RANK,item)
+        path: `/rank/${item.id}`,
+      });
+      store.commit(SET_RANK, item);
     }
-    onMounted(()=>{
-      getRankList().then(v=>{
+    onMounted(() => {
+      getRankList().then((v) => {
         rank.lists = v;
-      })
-      _handlePlayList(playList.value)
-    })
-    onActivated(()=>{
-      _handlePlayList(playList.value)
-    })
+      });
+      _handlePlayList(playList.value);
+    });
+    onActivated(() => {
+      _handlePlayList(playList.value);
+    });
     return {
       rank,
       rankList,
       topList,
-      selectItem
-    }
-  }
+      selectItem,
+    };
+  },
 };
 </script>
 

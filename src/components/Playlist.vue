@@ -5,40 +5,37 @@
         <div class="list-header">
           <h1 class="title">
             <i class="icon"></i>
-            <span class="text"></span>
-            <span class="clear"><i class="icon-clear"></i></span>
+            <span class="text">播放列表</span>
+            <span class="clear" @click="showConfirm"
+              ><i class="icon-clear"></i
+            ></span>
           </h1>
         </div>
         <Scroll ref="listContent" :data="sequenceList" class="list-content">
-          <ul>
+          <transition-group name="list" tag="ul">
             <li
               ref="listItem"
               class="item"
               @click="selectItem(item, idx)"
               v-for="(item, idx) in sequenceList"
-              :key="idx"
+              :key="item.mid"
             >
               <i class="current" :class="getCurCls(item)"></i>
               <span class="text">{{ item.name }}</span>
-              <span class="like">
-                <i class="icon-not-favorite"></i>
+              <span class="like" @click.stop="toggleFavor(item)">
+                <i :class="getFavorIcon(item)"></i>
               </span>
-              <span class="delete">
+              <span class="delete" @click.stop="deleteOne(item)">
                 <i class="icon-delete"></i>
               </span>
             </li>
-          </ul>
+          </transition-group>
         </Scroll>
-        <div class="list-operate">
-          <div class="add">
-            <i class="icon-add"></i>
-            <span class="text">添加歌曲列表</span>
-          </div>
-        </div>
         <div class="list-close" @click="onHide">
           <span>关闭</span>
         </div>
       </div>
+      <Confirm @confirm="clearList" ref="confirm" text="是否清空列表"></Confirm>
     </div>
   </transition>
 </template>
@@ -46,14 +43,16 @@
 <script>
 import { reactive, toRefs, computed, ref, watch } from "@vue/composition-api";
 import Scroll from "../ui/scroll";
+import Confirm from "../ui/confirm";
 import { SET_CURRENT_IDX, SET_PLAYING_STATE } from "../store/constant";
 
 export default {
-  components: { Scroll },
+  components: { Scroll, Confirm },
   setup(_, { root }) {
     const store = root.$store;
     const listContent = ref(null);
     const listItem = ref(null);
+    const confirm = ref(null);
     const playlist = reactive({
       show: false,
     });
@@ -86,6 +85,31 @@ export default {
       const idx = sequenceList.value.findIndex((song) => song.mid === cur.mid);
       listContent.value.scrollToElement(listItem.value[idx], 300);
     }
+    function deleteOne(item) {
+      store.dispatch("deleteSong", item);
+      if (!playList.value.length) onHide();
+    }
+    function showConfirm() {
+      confirm.value.onShow();
+    }
+    function clearList() {
+      store.dispatch("deleteAll");
+      onHide();
+    }
+    function getFavorIcon(item) {
+      return _isFavor(item) ? "icon-favorite" : "icon-not-favorite";
+    }
+    function toggleFavor(item) {
+      _isFavor(item)
+        ? store.dispatch("deleteFavor", item)
+        : store.dispatch("saveFavor", item);
+    }
+    function _isFavor(item) {
+      const idx = store.getters.favor.findIndex(
+        (song) => song.mid === item.mid
+      );
+      return idx > -1;
+    }
     watch(
       () => currentSong.value,
       (newS, oldS) => {
@@ -104,6 +128,12 @@ export default {
       getCurCls,
       selectItem,
       listItem,
+      deleteOne,
+      confirm,
+      showConfirm,
+      clearList,
+      getFavorIcon,
+      toggleFavor,
     };
   },
 };
@@ -187,21 +217,6 @@ export default {
           .delete
             font-size: $font-size-small
             color: $color-theme
-      .list-operate
-        width: 140px
-        margin: 20px auto 30px auto
-        .add
-          display: flex
-          align-items: center
-          padding: 8px 16px
-          border: 1px solid $color-text-l
-          border-radius: 100px
-          color: $color-text-l
-          .icon-add
-            margin-right: 5px
-            font-size: $font-size-small-s
-          .text
-            font-size: $font-size-small
       .list-close
         text-align: center
         line-height: 50px

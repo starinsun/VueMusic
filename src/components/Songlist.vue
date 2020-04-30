@@ -8,7 +8,7 @@
         :key="song.id"
       >
         <div class="rank" v-show="rank">
-          <span class="text">{{idx+1}}</span>
+          <span class="text">{{ idx + 1 }}</span>
         </div>
         <div class="content">
           <h2 class="name">{{ song.name }}</h2>
@@ -16,32 +16,44 @@
         </div>
       </li>
     </ul>
-    <Loading v-show="!songs.length"></Loading>
+    <Loading v-show="isShow"></Loading>
   </div>
 </template>
 
 <script>
 import Loading from "../ui/loading";
+import { computed } from "@vue/composition-api";
 export default {
   props: {
     songs: {
       type: Array,
-      default: null,
+      default: () => [],
     },
-    rank:{
+    rank: {
       type: Boolean,
-      default: false
-    }
+      default: false,
+    },
+    noneed: {
+      type: Boolean,
+      default: false,
+    },
   },
   components: { Loading },
-  setup(_, { emit }) {
+  setup(props, { emit }) {
     function getDesc(song) {
       return `${song.singer[0].name} · ${song.album.name} · ${song.name}`;
     }
     function selectItem(song, idx) {
       emit("select", song, idx);
     }
-    return { getDesc, selectItem };
+    const isShow = computed(() => {
+      if (props.noneed === false) {
+        return !props.songs.length;
+      } else {
+        return false;
+      }
+    });
+    return { getDesc, selectItem, isShow };
   },
 };
 </script>

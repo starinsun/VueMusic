@@ -43,6 +43,7 @@
       ref="confirm"
       text="是否清空列表"
     ></Confirm>
+    <router-view></router-view>
   </div>
 </template>
 
